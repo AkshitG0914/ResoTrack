@@ -4,8 +4,7 @@ const productSchema = mongoose.Schema(
   {
     name: { type: String, required: true },
     description: { type: String},
-    category: { type: String, required: true, enum: ["Electronics", "Clothing", "Home", "Grocery", "Other"] },
-    price: { type: Number, required: true },
+    category: { type: String, required: true, enum: ["Hardware", "Software", "Equipment", "Space", "Vehicle", "Other"] },
     stock: { type: Number, required: true, default: 0 },
     lowStockThreshold: { type: Number, default: 5 }, // Quantity available
     status: { type: String, enum: ["Available", "Out of Stock"], default: "Available" },

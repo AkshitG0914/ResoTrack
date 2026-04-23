@@ -519,9 +519,13 @@ const OrderDashboard = () => {
 
   // Calculate summary statistics
   const totalOrders = orders?.length || 0;
-  const pendingOrders = orders?.filter(order => order.orderStatus === "Processing").length || 0;
-  const deliveredOrders = orders?.filter(order => order.orderStatus === "Delivered").length || 0;
-  const totalRevenue = orders?.reduce((sum, order) => sum + order.totalAmount, 0) || 0;
+  const pendingOrders = orders?.filter(order => order.orderStatus === "Pending").length || 0;
+  const deliveredOrders = orders?.filter(order => order.orderStatus === "Approved" || order.orderStatus === "Delivered").length || 0;
+  
+  // Calculate total requested items
+  const totalRevenue = orders?.reduce((sum, order) => {
+    return sum + (order.items?.reduce((itemSum, item) => itemSum + item.quantity, 0) || 0);
+  }, 0) || 0;
 
   // Get unique statuses for filtering
   const statuses = ["all", ...new Set(orders.map(order => order.orderStatus))];
@@ -536,12 +540,13 @@ const OrderDashboard = () => {
 
   const getStatusClass = (status) => {
     switch (status) {
+      case "Approved":
       case "Delivered":
         return "text-emerald-600 bg-emerald-100";
+      case "Pending":
       case "Processing":
-        return "text-yellow-600 bg-yellow-100";
-      case "Shipped":
-        return "text-cyan-600 bg-cyan-100";
+        return "text-amber-600 bg-amber-100";
+      case "Rejected":
       case "Cancelled":
         return "text-red-600 bg-red-100";
       default:
@@ -581,21 +586,21 @@ const OrderDashboard = () => {
             <header className="mb-8 pt-6 text-white">
               <div className="mb-4 inline-flex items-center px-4 py-2 rounded-full bg-violet-500/20 text-violet-200 text-sm font-medium tracking-wider">
                 <ShoppingBag size={16} className="mr-2" />
-                ORDER MANAGEMENT
+                REQUEST MANAGEMENT
               </div>
               <h1 className="text-4xl lg:text-5xl font-bold mb-2">
-                <span className="text-zinc-50 block">Orders</span>
+                <span className="text-zinc-50 block">Requests</span>
                 <span className="bg-gradient-to-r from-violet-300 via-indigo-200 to-purple-300 bg-clip-text text-transparent">
-                  Dashboard & Management
+                  Review & Allocations
                 </span>
               </h1>
-              <p className="text-zinc-300 mt-2">Track, update and manage all customer orders from one place</p>
+              <p className="text-zinc-300 mt-2">Review, approve, and manage all employee resource requests</p>
             </header>
 
             {/* Dashboard Stats */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 mt-16">
               <StatCard 
-                title="Total Orders" 
+                title="Total Requests" 
                 value={totalOrders} 
                 change="+5.2%" 
                 isPositive={true} 
@@ -605,7 +610,7 @@ const OrderDashboard = () => {
                 color="violet" 
               />
               <StatCard 
-                title="Pending Orders" 
+                title="Pending Requests" 
                 value={pendingOrders} 
                 change="-2.1%" 
                 isPositive={false} 
@@ -615,7 +620,7 @@ const OrderDashboard = () => {
                 color="indigo" 
               />
               <StatCard 
-                title="Delivered" 
+                title="Approved" 
                 value={deliveredOrders} 
                 change="+8.3%" 
                 isPositive={true} 
@@ -625,8 +630,8 @@ const OrderDashboard = () => {
                 color="purple" 
               />
               <StatCard 
-                title="Total Revenue" 
-                value={`₹${totalRevenue.toLocaleString()}`} 
+                title="Total Requested Items" 
+                value={totalRevenue} 
                 change="+12.5%" 
                 isPositive={true} 
                 icon={<IndianRupee size={24} className="text-white" />} 
@@ -644,7 +649,7 @@ const OrderDashboard = () => {
                     <Search className="absolute left-3 top-3 text-slate-500 dark:text-slate-400" size={18} />
                     <input
                       type="text"
-                      placeholder="Search by customer or order ID..."
+                      placeholder="Search by employee or request ID..."
                       className="pl-10 pr-4 py-3 w-full rounded-lg bg-white/70 dark:bg-slate-700/70 border border-slate-200/50 dark:border-slate-700/50 shadow-sm focus:ring-violet-500 focus:border-violet-500 transition-all dark:text-white"
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
@@ -680,17 +685,17 @@ const OrderDashboard = () => {
             ) : filteredOrders.length === 0 ? (
               <div className="bg-gradient-to-br from-white/80 to-white/40 dark:from-slate-800/80 dark:to-slate-800/40 backdrop-blur-xl rounded-2xl border border-slate-200/50 dark:border-slate-700/50 shadow-lg p-8 text-center">
                 <ShoppingBag size={40} className="text-slate-400 dark:text-slate-500 mx-auto mb-3" />
-                <p className="text-slate-500 dark:text-slate-400">No orders found matching your criteria.</p>
+                <p className="text-slate-500 dark:text-slate-400">No requests found matching your criteria.</p>
               </div>
             ) : (
               <div className="bg-gradient-to-br from-white/80 to-white/40 dark:from-slate-800/80 dark:to-slate-800/40 backdrop-blur-xl rounded-2xl border border-slate-200/50 dark:border-slate-700/50 shadow-lg hover:shadow-xl transition-all overflow-hidden">
                 <table className="w-full text-left border-collapse">
                   <thead>
                     <tr className="bg-slate-50/50 dark:bg-slate-800/50 text-slate-700 dark:text-slate-300">
-                      <th className="p-4 font-semibold">Order ID</th>
-                      <th className="p-4 font-semibold">Customer</th>
+                      <th className="p-4 font-semibold">Request ID</th>
+                      <th className="p-4 font-semibold">Employee</th>
                       <th className="p-4 font-semibold">Date</th>
-                      <th className="p-4 font-semibold">Total</th>
+                      <th className="p-4 font-semibold">Justification</th>
                       <th className="p-4 font-semibold">Status</th>
                       <th className="p-4 font-semibold">Actions</th>
                     </tr>
@@ -706,10 +711,9 @@ const OrderDashboard = () => {
                             {new Date(order.createdAt).toLocaleDateString()}
                           </div>
                         </td>
-                        <td className="p-4 font-medium text-slate-800 dark:text-slate-200">
-                          <div className="flex items-center">
-                            <IndianRupee size={16} className="mr-1" />
-                            {order.totalAmount.toLocaleString()}
+                        <td className="p-4 text-sm text-slate-600 dark:text-slate-400 max-w-xs">
+                          <div className="truncate" title={order.justification}>
+                            {order.justification || "No justification provided."}
                           </div>
                         </td>
                         <td className="p-4">
@@ -749,17 +753,17 @@ const OrderDashboard = () => {
       {selectedOrder && modalType === 'update' && (
         <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex justify-center items-center z-50">
           <div className="bg-gradient-to-br from-white/80 to-white/40 dark:from-slate-800/80 dark:to-slate-800/40 backdrop-blur-xl p-6 rounded-2xl shadow-xl max-w-md w-full border border-slate-200/50 dark:border-slate-700/50">
-            <h2 className="text-xl font-bold mb-4 text-slate-800 dark:text-white">Update Order Status</h2>
-            <p className="text-slate-600 dark:text-slate-300 mb-4">Select a new status for this order</p>
+            <h2 className="text-xl font-bold mb-4 text-slate-800 dark:text-white">Update Request Status</h2>
+            <p className="text-slate-600 dark:text-slate-300 mb-4">Select a new status for this request</p>
             <select
               value={status}
               onChange={(e) => setStatus(e.target.value)}
               className="w-full p-3 rounded-lg bg-white/70 dark:bg-slate-700/70 border border-slate-200/50 dark:border-slate-700/50 shadow-sm focus:ring-violet-500 focus:border-violet-500 transition-all dark:text-white"
             >
               <option value="">Select Status</option>
-              <option value="Processing">Processing</option>
-              <option value="Shipped">Shipped</option>
-              <option value="Delivered">Delivered</option>
+              <option value="Pending">Pending</option>
+              <option value="Approved">Approved</option>
+              <option value="Rejected">Rejected</option>
             </select>
             <div className="mt-6 flex justify-end space-x-3">
               <button
@@ -784,7 +788,7 @@ const OrderDashboard = () => {
       {selectedOrder && modalType === 'cancel' && (
         <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex justify-center items-center z-50">
           <div className="bg-gradient-to-br from-white/80 to-white/40 dark:from-slate-800/80 dark:to-slate-800/40 backdrop-blur-xl p-6 rounded-2xl shadow-xl max-w-md w-full border border-slate-200/50 dark:border-slate-700/50">
-            <h2 className="text-xl font-bold mb-2 text-slate-800 dark:text-white">Cancel Order</h2>
+            <h2 className="text-xl font-bold mb-2 text-slate-800 dark:text-white">Cancel Request</h2>
             <p className="text-slate-600 dark:text-slate-300 mb-4">Please provide a reason for cancellation</p>
             <textarea
               value={cancelReason}

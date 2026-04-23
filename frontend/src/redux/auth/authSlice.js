@@ -8,7 +8,7 @@ const user = JSON.parse(localStorage.getItem("user")) || null;
 // 📌 Register User
 export const registerUser = createAsyncThunk("auth/register", async (userData, thunkAPI) => {
   try {
-    const response = await axios.post(`http://localhost:5000//api/users/register`, userData);
+    const response = await axios.post(`http://localhost:5000/api/users/register`, userData);
     if (response.data) {
       localStorage.setItem('user', JSON.stringify(response.data));
     }

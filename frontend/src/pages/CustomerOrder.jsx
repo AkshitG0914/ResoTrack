@@ -17,6 +17,7 @@ const CustomerOrder = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [localProducts, setLocalProducts] = useState([]);
   const [isProcessingOrder, setIsProcessingOrder] = useState(false);
+  const [justification, setJustification] = useState("");
 
   useEffect(() => {
     const handleScroll = () => {
@@ -104,6 +105,11 @@ const CustomerOrder = () => {
       return;
     }
 
+    if (!justification.trim()) {
+      alert("Please provide a justification for this request.");
+      return;
+    }
+
     try {
       setIsProcessingOrder(true);
       setIsProcessing(true);
@@ -115,7 +121,7 @@ const CustomerOrder = () => {
           quantity: item.quantity,
           price: item.price
         })),
-        totalAmount: calculateTotal(),
+        justification: justification.trim()
       };
 
       await dispatch(placeOrder(orderData)).unwrap();
@@ -141,6 +147,7 @@ const CustomerOrder = () => {
       setOrderStatus('delivered');
       setOrderSuccess(true);
       setCart([]);
+      setJustification("");
       setOrderStatus('idle');
 
     } catch (error) {
@@ -193,21 +200,21 @@ const CustomerOrder = () => {
             <header className="mb-8 pt-6 text-white">
               <div className="mb-4 inline-flex items-center px-4 py-2 rounded-full bg-violet-500/20 text-violet-200 text-sm font-medium tracking-wider">
                 <ShoppingCart size={16} className="mr-2" />
-                CUSTOMER SHOPPING CENTER
+                RESOURCE CATALOG
               </div>
               <h1 className="text-4xl lg:text-5xl font-bold mb-2">
-                <span className="text-zinc-50 block">Order Management</span>
+                <span className="text-zinc-50 block">Resource Requests</span>
                 <span className="bg-gradient-to-r from-violet-300 via-indigo-200 to-purple-300 bg-clip-text text-transparent">
-                  Products & Shopping Cart
+                  Available Resources & Request List
                 </span>
               </h1>
-              <p className="text-zinc-300 mt-2">Browse our products and place your order in just a few clicks</p>
+              <p className="text-zinc-300 mt-2">Browse our resources and submit your request in just a few clicks</p>
             </header>
 
             {/* Stat Cards Grid - Matching Dashboard style */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 mt-16">
               <StatCard 
-                title="Available Products" 
+                title="Available Resources" 
                 value={products?.length || 0} 
                 change="+3 new" 
                 isPositive={true} 
@@ -217,7 +224,7 @@ const CustomerOrder = () => {
                 color="violet" 
               />
               <StatCard 
-                title="Items in Cart" 
+                title="Items in Request" 
                 value={getItemsCount()} 
                 change={getItemsCount() > 0 ? "+1 item" : "0 items"} 
                 isPositive={getItemsCount() > 0} 
@@ -227,11 +234,11 @@ const CustomerOrder = () => {
                 color="indigo" 
               />
               <StatCard 
-                title="Cart Total" 
-                value={`₹${calculateTotal().toLocaleString()}`} 
-                change={calculateTotal() > 0 ? "+₹" + calculateTotal().toLocaleString() : "₹0"} 
-                isPositive={calculateTotal() > 0} 
-                icon={<DollarSign size={24} className="text-white" />} 
+                title="Request Priority" 
+                value="Normal" 
+                change="Standard SLA" 
+                isPositive={true} 
+                icon={<ChartBar size={24} className="text-white" />} 
                 delay={200} 
                 animate={animateStats}
                 color="purple" 
@@ -250,16 +257,16 @@ const CustomerOrder = () => {
                           <Package className="w-5 h-5 text-white" />
                         </div>
                         <div>
-                          <h2 className="text-lg font-semibold text-slate-900 dark:text-white">Available Products</h2>
-                          <p className="text-sm text-slate-500 dark:text-slate-400">Select items to add to cart</p>
+                          <h2 className="text-lg font-semibold text-slate-900 dark:text-white">Available Resources</h2>
+                          <p className="text-sm text-slate-500 dark:text-slate-400">Select resources to request</p>
                         </div>
                       </div>
                       <div className="flex items-center gap-3">
                         <select className="px-3 py-2 bg-white/50 dark:bg-slate-900/50 border border-slate-200/50 dark:border-slate-700/50 rounded-lg text-sm backdrop-blur-sm text-slate-700 dark:text-slate-200">
                           <option>All Categories</option>
-                          <option>Electronics</option>
-                          <option>Apparel</option>
-                          <option>Home Goods</option>
+                          <option>Hardware</option>
+                          <option>Software</option>
+                          <option>Equipment</option>
                         </select>
                       </div>
                     </div>
@@ -296,7 +303,7 @@ const CustomerOrder = () => {
                           <ShoppingCart className="w-5 h-5 text-white" />
                         </div>
                         <div>
-                          <h2 className="text-lg font-semibold text-slate-900 dark:text-white">Your Cart</h2>
+                          <h2 className="text-lg font-semibold text-slate-900 dark:text-white">Your Request</h2>
                           <p className="text-sm text-slate-500 dark:text-slate-400">{getItemsCount()} items</p>
                         </div>
                       </div>
@@ -305,7 +312,7 @@ const CustomerOrder = () => {
                           onClick={handleClearCart}
                           className="px-3 py-1 text-sm bg-red-500/10 text-red-500 hover:bg-red-500/20 rounded-lg transition-colors"
                         >
-                          Clear Cart
+                          Clear Request
                         </button>
                       )}
                     </div>
@@ -316,13 +323,13 @@ const CustomerOrder = () => {
                       <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-emerald-500/20 mb-4">
                         <CheckCircle className="w-8 h-8 text-emerald-500 dark:text-emerald-400" />
                       </div>
-                      <h3 className="text-lg font-medium text-slate-900 dark:text-white mb-2">Order Placed Successfully!</h3>
-                      <p className="text-slate-500 dark:text-slate-400 mb-6">Your order has been placed and is being processed</p>
+                      <h3 className="text-lg font-medium text-slate-900 dark:text-white mb-2">Request Submitted Successfully!</h3>
+                      <p className="text-slate-500 dark:text-slate-400 mb-6">Your request has been submitted and is pending approval</p>
                       <button
                         onClick={() => setOrderSuccess(false)}
                         className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-violet-500 to-indigo-600 hover:from-violet-600 hover:to-indigo-700 text-white rounded-lg transition-colors shadow-md hover:shadow-xl hover:shadow-violet-500/25"
                       >
-                        Place Another Order <ArrowRight className="ml-2 w-4 h-4" />
+                        Submit Another Request <ArrowRight className="ml-2 w-4 h-4" />
                       </button>
                     </div>
                   ) : cart.length === 0 ? (
@@ -330,8 +337,8 @@ const CustomerOrder = () => {
                       <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-violet-500/20 mb-4">
                         <ShoppingCart className="w-8 h-8 text-violet-500 dark:text-violet-400" />
                       </div>
-                      <h3 className="text-lg font-medium text-slate-900 dark:text-white mb-2">Your cart is empty</h3>
-                      <p className="text-slate-500 dark:text-slate-400 mb-6">Add products to your cart to proceed</p>
+                      <h3 className="text-lg font-medium text-slate-900 dark:text-white mb-2">Your request is empty</h3>
+                      <p className="text-slate-500 dark:text-slate-400 mb-6">Add resources to your request to proceed</p>
                     </div>
                   ) : (
                     <>
@@ -352,16 +359,22 @@ const CustomerOrder = () => {
                       <div className="p-6 border-t border-slate-200/50 dark:border-slate-700/50 bg-gradient-to-br from-slate-50/80 to-white/40 dark:from-slate-800/80 dark:to-slate-700/40">
                         <div className="space-y-4">
                           <div className="flex justify-between items-center">
-                            <span className="text-slate-600 dark:text-slate-400">Subtotal</span>
-                            <span className="font-semibold text-slate-900 dark:text-white">₹{calculateTotal().toLocaleString()}</span>
+                            <span className="text-slate-600 dark:text-slate-400">Total Items</span>
+                            <span className="font-semibold text-slate-900 dark:text-white">{getItemsCount()}</span>
                           </div>
-                          <div className="flex justify-between items-center">
-                            <span className="text-slate-600 dark:text-slate-400">Shipping</span>
-                            <span className="font-medium text-slate-900 dark:text-white">Free</span>
-                          </div>
-                          <div className="flex justify-between items-center pt-2 border-t border-slate-200/50 dark:border-slate-700/50">
-                            <span className="font-medium text-slate-900 dark:text-white">Total</span>
-                            <span className="text-lg font-bold text-slate-900 dark:text-white">₹{calculateTotal().toLocaleString()}</span>
+                          
+                          <div className="pt-4 border-t border-slate-200/50 dark:border-slate-700/50">
+                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                              Why do you need this resource? <span className="text-red-500">*</span>
+                            </label>
+                            <textarea
+                              value={justification}
+                              onChange={(e) => setJustification(e.target.value)}
+                              placeholder="E.g., Client presentation, Temporary replacement laptop..."
+                              className="w-full px-3 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-violet-500 outline-none resize-none"
+                              rows="3"
+                              required
+                            ></textarea>
                           </div>
                           
                           <button
@@ -374,14 +387,14 @@ const CustomerOrder = () => {
                             {isProcessingOrder ? (
                               <>
                                 <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin mr-3"></div>
-                                {orderStatus === 'processing' && 'Processing Order...'}
-                                {orderStatus === 'shipping' && 'Confirming Order...'}
-                                {orderStatus === 'delivered' && 'Completing Order...'}
+                                {orderStatus === 'processing' && 'Processing Request...'}
+                                {orderStatus === 'shipping' && 'Validating Request...'}
+                                {orderStatus === 'delivered' && 'Completing Request...'}
                               </>
                             ) : (
                               <>
                                 <CreditCard className="w-5 h-5 mr-2" />
-                                Checkout ({getItemsCount()} items)
+                                Submit Request ({getItemsCount()} items)
                               </>
                             )}
                           </button>
@@ -493,10 +506,9 @@ const ProductCard = ({ product, onAddToCart, isProcessing }) => {
         
         <div className="flex items-center justify-between">
           <div className="flex items-baseline gap-1">
-            <span className="text-2xl font-bold bg-gradient-to-r from-violet-600 to-indigo-600 bg-clip-text text-transparent">
-              ₹{product.price.toLocaleString()}
+            <span className="text-sm font-medium text-slate-500 dark:text-slate-400">
+              Requestable
             </span>
-            <span className="text-sm text-slate-500 dark:text-slate-400">/unit</span>
           </div>
           
           <button
@@ -535,7 +547,7 @@ const CartItem = ({ item, onAdd, onRemove, onDelete }) => {
             {item.name}
           </h3>
           <p className="text-sm text-slate-500 dark:text-slate-400">
-            ₹{item.price.toLocaleString()} × {item.quantity}
+            Quantity: {item.quantity}
           </p>
           {/* Add stock limit indicator */}
           <p className="text-xs text-slate-400 dark:text-slate-500">
@@ -543,7 +555,7 @@ const CartItem = ({ item, onAdd, onRemove, onDelete }) => {
           </p>
         </div>
         <p className="font-semibold text-slate-900 dark:text-white">
-          ₹{(item.price * item.quantity).toLocaleString()}
+          {item.quantity} units
         </p>
       </div>
       

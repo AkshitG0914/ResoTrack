@@ -8,9 +8,10 @@ const getDashboardStats = asyncHandler(async (req, res) => {
       // Fetch Total Orders Count
       const totalOrders = await Order.countDocuments() || 0;
   
-      // Fetch Total Revenue
+      // Fetch Total Allocated Items
       const revenueResult = await Order.aggregate([
-        { $group: { _id: null, totalRevenue: { $sum: "$totalAmount" } } }
+        { $unwind: "$items" },
+        { $group: { _id: null, totalRevenue: { $sum: "$items.quantity" } } }
       ]);
       const totalRevenue = revenueResult.length > 0 ? revenueResult[0].totalRevenue : 0;
   
@@ -58,15 +59,16 @@ const getAllUsers = asyncHandler(async (req, res) => {
 });
 const getRevenueAnalytics = asyncHandler(async (req, res) => {
   try {
-    // Aggregate total revenue per month
+    // Aggregate total allocations per month
     const revenueByMonth = await Order.aggregate([
       {
-        $match: { orderStatus: "Delivered" } // Only count completed orders
+        $match: { orderStatus: { $in: ["Delivered", "Approved"] } } // Count completed allocations
       },
+      { $unwind: "$items" },
       {
         $group: {
           _id: { $month: "$createdAt" }, // Group by month
-          totalRevenue: { $sum: "$totalAmount" }
+          totalRevenue: { $sum: "$items.quantity" }
         }
       },
       { $sort: { _id: 1 } } // Sort by month

@@ -141,11 +141,11 @@ const InventoryDashboard = () => {
                 color="purple" 
               />
               <StatCard 
-                title="Total Value" 
-                value={`₹${items.reduce((sum, item) => sum + (item.price * item.stock), 0).toLocaleString()}`} 
-                change="+7.2%" 
+                title="System Status" 
+                value="Active" 
+                change="All systems go" 
                 isPositive={true} 
-                icon={<IndianRupee size={24} className="text-white" />} 
+                icon={<ChartBar size={24} className="text-white" />} 
                 delay={300} 
                 animate={animateStats}
                 color="violet" 
@@ -182,13 +182,13 @@ const InventoryDashboard = () => {
                   </select>
                 </div>
 
-                {/* Only Admin & Warehouse Manager Can Add Products */}
-                {user?.role === "admin" || user?.role === "warehouse_manager" ? (
+                {/* Only Admin & Resource Manager Can Add Products */}
+                {user?.role === "admin" || user?.role === "resource_manager" ? (
                   <button
                     onClick={() => setShowAddModal(true)}
                     className="w-full md:w-auto px-6 py-3 bg-gradient-to-r from-violet-500 to-indigo-600 text-white rounded-lg shadow-md hover:shadow-lg hover:shadow-violet-500/30 transition-all duration-300 transform hover:-translate-y-1 flex items-center justify-center"
                   >
-                    <Plus size={18} className="mr-2" /> Add New Product
+                    <Plus size={18} className="mr-2" /> Add New Resource
                   </button>
                 ) : null}
               </div>
@@ -213,11 +213,10 @@ const InventoryDashboard = () => {
                 <table className="w-full text-left border-collapse">
                   <thead>
                     <tr className="bg-slate-50/50 dark:bg-slate-800/50 text-slate-700 dark:text-slate-300">
-                      <th className="p-4 font-semibold">Product Name</th>
+                      <th className="p-4 font-semibold">Resource Name</th>
                       <th className="p-4 font-semibold">Category</th>
                       <th className="p-4 font-semibold">Stock</th>
-                      <th className="p-4 font-semibold">Price</th>
-                      {user?.role === "admin" || user?.role === "warehouse_manager" ? <th className="p-4 font-semibold">Actions</th> : null}
+                      {user?.role === "admin" || user?.role === "resource_manager" ? <th className="p-4 font-semibold">Actions</th> : null}
                     </tr>
                   </thead>
                   <tbody>
@@ -234,21 +233,20 @@ const InventoryDashboard = () => {
                             {product.stock} units
                           </span>
                         </td>
-                        <td className="p-4 font-medium text-slate-800 dark:text-slate-200">₹{product.price.toLocaleString()}</td>
-                        {user?.role === "admin" || user?.role === "warehouse_manager" ? (
+                        {user?.role === "admin" || user?.role === "resource_manager" ? (
                           <td className="p-4">
                             <div className="flex space-x-2">
                               <button
                                 onClick={() => setEditProduct(product)}
                                 className="p-2 bg-gradient-to-r from-amber-500 to-yellow-600 text-white rounded-lg hover:shadow-md transition-all duration-300 transform hover:-translate-y-1"
-                                title="Edit Product"
+                                title="Edit Resource"
                               >
                                 <Pencil size={16} />
                               </button>
                               <button
                                 onClick={() => handleDelete(product._id)}
                                 className="p-2 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg hover:shadow-md transition-all duration-300 transform hover:-translate-y-1"
-                                title="Delete Product"
+                                title="Delete Resource"
                               >
                                 <Trash size={16} />
                               </button>

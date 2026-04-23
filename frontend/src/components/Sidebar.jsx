@@ -32,7 +32,7 @@ const Sidebar = () => {
   const [showPopup, setShowPopup] = useState(false);
 
   // API base URL - adjust this based on your environment setup
-  const API_BASE_URL = `http://localhost:5000//api`;
+  const API_BASE_URL = `http://localhost:5000/api`;
 
   useEffect(() => {
     const fetchNotifications = async () => {
@@ -114,7 +114,7 @@ const Sidebar = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const user = useSelector((state) => state.auth.user);
-  const userRole = user?.role || "customer"; // Default to customer
+  const userRole = user?.role || "employee"; // Default to employee
 
   // Check if menu item is active
   const isActive = (path) => location.pathname === path || location.pathname.startsWith(`${path}/`);
@@ -135,28 +135,21 @@ const Sidebar = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Role-Based Navigation Items
   const roleBasedNav = {
     admin: [
       { title: "Dashboard", icon: <BarChart size={20} />, path: "/dashboard" },
-      { title: "Orders", icon: <Package size={20} />, path: "/orders" },
+      { title: "Requests", icon: <Package size={20} />, path: "/orders" },
       { title: "Users", icon: <Users size={20} />, path: "/admin/users" },
-      { title: "Inventory", icon: <Layers size={20} />, path: "/inventory" },
+      { title: "Resource Catalog", icon: <Layers size={20} />, path: "/inventory" },
     ],
-    customer: [
+    employee: [
       { title: "Dashboard", icon: <BarChart size={20} />, path: "/dashboard" },
-      { title: "Place Order", icon: <ShoppingCart size={20} />, path: "/customer/order" },
+      { title: "Request Resource", icon: <ShoppingCart size={20} />, path: "/employee/request" },
     ],
-    warehouse_manager: [
+    resource_manager: [
       { title: "Dashboard", icon: <BarChart size={20} />, path: "/dashboard" },
-      { title: "Inventory", icon: <Layers size={20} />, path: "/inventory" },
-      { title: "Orders", icon: <Package size={20} />, path: "/orders" },
-      // { title: "Shipments", icon: <Truck size={20} />, path: "/warehouse/shipments" },
-    ],
-    driver: [
-      { title: "Dashboard", icon: <BarChart size={20} />, path: "/dashboard" },
-      { title: "My Deliveries", icon: <Truck size={20} />, path: "/driver/deliveries" },
-      { title: "Track Shipment", icon: <MapPin size={20} />, path: "/driver/track" },
+      { title: "Resource Catalog", icon: <Layers size={20} />, path: "/inventory" },
+      { title: "Requests", icon: <Package size={20} />, path: "/orders" },
     ],
   };
 
@@ -229,7 +222,7 @@ const Sidebar = () => {
             <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-lg flex items-center justify-center shadow-lg">
               <Truck size={16} className="text-white" />
             </div>
-            {!collapsed && <h2 className="text-xl font-bold text-zinc-50">LogiSphere</h2>}
+            {!collapsed && <h2 className="text-xl font-bold text-zinc-50">ResoTrack</h2>}
           </div>
           <button
             className="text-emerald-400 hover:text-white transition-colors hidden lg:block"

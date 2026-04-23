@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = `http://localhost:5000//api/customer`; // Adjust API URL if needed
+const API_URL = `http://localhost:5000/api/customer`; // Adjust API URL if needed
 
 // Fetch customer orders
 export const getCustomerOrders = async () => {

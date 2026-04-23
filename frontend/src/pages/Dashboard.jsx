@@ -100,7 +100,7 @@ const AdminDashboard = () => {
                 {/* Stat cards updated with glassy design */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 mt-16">
                   <StatCard 
-                    title="Total Orders" 
+                    title="Active Requests" 
                     value={typeof orders === 'number' ? orders : 0} 
                     change="+12.5%" 
                     isPositive={true} 
@@ -110,8 +110,8 @@ const AdminDashboard = () => {
                     color="violet" 
                   />
                   <StatCard 
-                    title="Total Revenue" 
-                    value={`₹${(typeof revenue === 'number' ? revenue : 0).toLocaleString()}`} 
+                    title="Total Allocated Resources" 
+                    value={(typeof revenue === 'number' ? revenue : 0).toLocaleString()} 
                     change="+8.2%" 
                     isPositive={true} 
                     icon={<IndianRupee size={24} className="text-white" />} 
@@ -120,7 +120,7 @@ const AdminDashboard = () => {
                     color="indigo" 
                   />
                   <StatCard 
-                    title="Total Users" 
+                    title="Total Employees" 
                     value={totalUsers} 
                     change="+5.3%" 
                     isPositive={true} 
@@ -130,7 +130,7 @@ const AdminDashboard = () => {
                     color="purple" 
                   />
                   <StatCard 
-                    title="Available Stock" 
+                    title="Available Resources" 
                     value={typeof stock === 'number' ? stock : 0} 
                     change="-2.4%" 
                     isPositive={false} 
@@ -144,15 +144,15 @@ const AdminDashboard = () => {
                 {/* Chart cards updated with glassy design */}
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
                   <ChartCard 
-                    title="Sales Analytics" 
-                    subtitle="Monthly revenue from orders" 
+                    title="Allocation Analytics" 
+                    subtitle="Monthly allocated resources" 
                     chartType="bar" 
                     data={revenueData} 
                     loading={loadingnew}
                     className="lg:col-span-2" 
                   />
                   <ChartCard 
-                    title="Revenue Trend" 
+                    title="Allocation Trend" 
                     subtitle="Last 6 months" 
                     chartType="line" 
                     data={revenueData} 
@@ -166,9 +166,9 @@ const AdminDashboard = () => {
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     {[
                       { label: "Run Reports", icon: <TrendingUp size={20} /> },
-                      { label: "Manage Inventory", icon: <Archive size={20} /> },
-                      { label: "User Analytics", icon: <Users size={20} /> },
-                      { label: "Order Processing", icon: <Package size={20} /> },
+                      { label: "Manage Resources", icon: <Archive size={20} /> },
+                      { label: "Employee Analytics", icon: <Users size={20} /> },
+                      { label: "Request Processing", icon: <Package size={20} /> },
                     ].map((action, index) => (
                       <button 
                         key={index}
@@ -241,7 +241,7 @@ const ChartCard = ({ title, subtitle, chartType, data, loading, className = "" }
     if (active && payload && payload.length) {
       return (
         <div className="bg-white dark:bg-slate-800 p-4 rounded-lg shadow-lg border border-slate-200 dark:border-slate-700">
-          <p className="text-lg font-semibold text-violet-600 dark:text-violet-400">{`₹${payload[0].value.toLocaleString()}`}</p>
+          <p className="text-lg font-semibold text-violet-600 dark:text-violet-400">{payload[0].value.toLocaleString()}</p>
           <p className="text-sm text-slate-500 dark:text-slate-400">{payload[0].payload.month}</p>
         </div>
       );
@@ -385,7 +385,7 @@ const ChartCard = ({ title, subtitle, chartType, data, loading, className = "" }
                 tickLine={false} 
                 tick={{ fill: '#94a3b8', fontSize: 12 }}
                 width={60}
-                tickFormatter={(value) => `₹${value > 999 ? `${(value / 1000).toFixed(0)}K` : value}`}
+                tickFormatter={(value) => value > 999 ? `${(value / 1000).toFixed(0)}K` : value}
               />
               <Tooltip 
                 contentStyle={{ 
@@ -394,7 +394,7 @@ const ChartCard = ({ title, subtitle, chartType, data, loading, className = "" }
                   border: '1px solid #e2e8f0',
                   boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
                 }}
-                formatter={(value) => [`₹${value.toLocaleString()}`, 'Revenue']}
+                formatter={(value) => [value.toLocaleString(), 'Allocations']}
               />
               <defs>
                 <linearGradient id="colorRevenue" x1="0" y1="0" x2="1" y2="0">

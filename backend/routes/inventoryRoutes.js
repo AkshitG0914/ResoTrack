@@ -6,12 +6,12 @@ const { deleteProduct } = require("../controllers/inventoryController");
 const router = express.Router();
 
 // 📌 Get all inventory items
-router.get("/", protect, authorize("admin", "warehouse_manager"), getInventory);
-router.post("/", protect, authorize("admin", "warehouse_manager"), addProduct);
+router.get("/", protect, authorize("admin", "resource_manager"), getInventory);
+router.post("/", protect, authorize("admin", "resource_manager"), addProduct);
 
 // 📌 Update product in inventory
-router.put("/:id", protect, authorize("admin", "warehouse_manager"), updateProduct);
+router.put("/:id", protect, authorize("admin", "resource_manager"), updateProduct);
 
-router.delete("/:id", protect, authorize("admin", "warehouse_manager"), deleteProduct);
+router.delete("/:id", protect, authorize("admin", "resource_manager"), deleteProduct);
 
 module.exports = router;

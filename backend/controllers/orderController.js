@@ -15,11 +15,11 @@ const ORDER_STATUSES = ["Pending", "Processing", "Shipped", "Delivered", "Cancel
 
 // 📌 Create Order with Atomic Transactions
 const createOrder = asyncHandler(async (req, res) => {
-  const { items, totalAmount, shippingAddress } = req.body;
+  const { items, justification } = req.body;
   
   if (!items || items.length === 0) {
     res.status(400);
-    throw new Error("Order must include at least one product.");
+    throw new Error("Request must include at least one resource.");
   }
 
   const session = await mongoose.startSession();
@@ -52,12 +52,11 @@ const createOrder = asyncHandler(async (req, res) => {
       }
     }
 
-    // Create Order
+    // Create Request
     const order = new Order({
       customer: req.user._id,
       items,
-      totalAmount,
-      shippingAddress,
+      justification,
       orderStatus: "Pending",
       trackingId,
       qrCode: qrCodeData, // Store QR Code in order

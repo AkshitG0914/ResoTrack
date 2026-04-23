@@ -99,9 +99,8 @@ const AdminUsers = () => {
     
     const formatMap = {
       'admin': 'Admin',
-      'warehouse_manager': 'Warehouse Manager',
-      'driver': 'Driver',
-      'customer': 'Customer',
+      'resource_manager': 'Resource Manager',
+      'employee': 'Employee',
       'user': 'User'
     };
 
@@ -116,11 +115,10 @@ const AdminUsers = () => {
   const getRoleStyle = (role) => {
     const styleMap = {
       'admin': 'bg-violet-500/10 text-violet-600 dark:text-violet-400',
-      'warehouse_manager': 'bg-blue-500/10 text-blue-600 dark:text-blue-400',
-      'driver': 'bg-green-500/10 text-green-600 dark:text-green-400',
-      'customer': 'bg-slate-500/10 text-slate-600 dark:text-slate-400'
+      'resource_manager': 'bg-blue-500/10 text-blue-600 dark:text-blue-400',
+      'employee': 'bg-slate-500/10 text-slate-600 dark:text-slate-400'
     };
-    return styleMap[role?.toLowerCase()] || styleMap.customer;
+    return styleMap[role?.toLowerCase()] || styleMap.employee;
   };
 
   // Replace the role and status display in the user row

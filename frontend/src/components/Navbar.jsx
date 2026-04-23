@@ -38,7 +38,7 @@ const Navbar = () => {
   const dispatch = useDispatch();
 
   // API base URL - adjust this based on your environment setup
-  const API_BASE_URL = `http://localhost:5000//api`;
+  const API_BASE_URL = `http://localhost:5000/api`;
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -122,7 +122,7 @@ const Navbar = () => {
 
   const location = useLocation();
   const user = useSelector((state) => state.auth.user);
-  const userRole = user?.role || "customer"; // Default to customer
+  const userRole = user?.role || "employee"; // Default to employee
 
   // Handle logout
   const handleLogout = () => {
@@ -142,27 +142,21 @@ const Navbar = () => {
   // Check if menu item is active
   const isActive = (path) => location.pathname === path || location.pathname.startsWith(`${path}/`);
 
-  // Role-Based Navigation Items
   const roleBasedNav = {
     admin: [
       { title: "Dashboard", icon: <BarChart size={20} />, path: "/dashboard" },
-      { title: "Orders", icon: <Package size={20} />, path: "/orders" },
+      { title: "Requests", icon: <Package size={20} />, path: "/orders" },
       { title: "Users", icon: <Users size={20} />, path: "/admin/users" },
-      { title: "Inventory", icon: <Layers size={20} />, path: "/inventory" },
+      { title: "Resource Catalog", icon: <Layers size={20} />, path: "/inventory" },
     ],
-    customer: [
+    employee: [
       { title: "Dashboard", icon: <BarChart size={20} />, path: "/dashboard" },
-      { title: "Place Order", icon: <ShoppingCart size={20} />, path: "/customer/order" },
+      { title: "Request Resource", icon: <ShoppingCart size={20} />, path: "/employee/request" },
     ],
-    warehouse_manager: [
+    resource_manager: [
       { title: "Dashboard", icon: <BarChart size={20} />, path: "/dashboard" },
-      { title: "Inventory", icon: <Layers size={20} />, path: "/inventory" },
-      { title: "Orders", icon: <Package size={20} />, path: "/orders" },
-    ],
-    driver: [
-      { title: "Dashboard", icon: <BarChart size={20} />, path: "/dashboard" },
-      { title: "My Deliveries", icon: <Truck size={20} />, path: "/driver/deliveries" },
-      { title: "Track Shipment", icon: <MapPin size={20} />, path: "/driver/track" },
+      { title: "Resource Catalog", icon: <Layers size={20} />, path: "/inventory" },
+      { title: "Requests", icon: <Package size={20} />, path: "/orders" },
     ],
   };
 
@@ -219,7 +213,7 @@ const Navbar = () => {
             </div>
             <h2 className="text-xl font-bold text-zinc-50">
               <span className="bg-gradient-to-r from-violet-200 via-indigo-200 to-purple-200 bg-clip-text text-transparent">
-                LogiSphere
+                ResoTrack
               </span>
             </h2>
           </Link>
@@ -233,8 +227,8 @@ const Navbar = () => {
                     key={index}
                     to={item.path}
                     className={`px-3 py-2 rounded-lg text-sm font-medium flex items-center transition-all duration-300 ${isActive(item.path)
-                        ? "bg-gradient-to-r from-violet-600/80 to-indigo-600/80 text-white shadow-md"
-                        : "text-zinc-300 hover:bg-violet-800/30 hover:text-white"
+                      ? "bg-gradient-to-r from-violet-600/80 to-indigo-600/80 text-white shadow-md"
+                      : "text-zinc-300 hover:bg-violet-800/30 hover:text-white"
                       }`}
                     onMouseEnter={() => setHoveredItem(`nav-${index}`)}
                     onMouseLeave={() => setHoveredItem(null)}
@@ -452,8 +446,8 @@ const Navbar = () => {
                 key={index}
                 to={item.path}
                 className={`flex items-center px-4 py-3 rounded-lg text-base font-medium transition-colors ${isActive(item.path)
-                    ? "bg-gradient-to-r from-violet-600/80 to-indigo-600/80 text-white shadow-md"
-                    : "text-zinc-300 hover:bg-violet-800/40 hover:text-white"
+                  ? "bg-gradient-to-r from-violet-600/80 to-indigo-600/80 text-white shadow-md"
+                  : "text-zinc-300 hover:bg-violet-800/40 hover:text-white"
                   }`}
                 onClick={() => setShowMobileMenu(false)}
               >

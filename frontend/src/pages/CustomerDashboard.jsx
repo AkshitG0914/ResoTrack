@@ -73,7 +73,7 @@ const CustomerDashboard = () => {
             <header className="mb-8 pt-6 text-white">
               <div className="mb-4 inline-flex items-center px-4 py-2 rounded-full bg-violet-500/20 text-violet-200 text-sm font-medium tracking-wider">
                 <User size={16} className="mr-2" />
-                CUSTOMER DASHBOARD
+                EMPLOYEE DASHBOARD
               </div>
               <h1 className="text-4xl lg:text-5xl font-bold mb-2">
                 <span className="text-zinc-50 block">Welcome back,</span>
@@ -81,7 +81,7 @@ const CustomerDashboard = () => {
                   {profile?.name || "User"}
                 </span>
               </h1>
-              <p className="text-zinc-300 mt-2">Here's what's happening with your supply chain today</p>
+              <p className="text-zinc-300 mt-2">Here's what's happening with your requests today</p>
             </header>
 
             {loading ? (
@@ -97,7 +97,7 @@ const CustomerDashboard = () => {
                 {/* Stat cards updated with glassy design */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 mt-16">
                   <StatCard 
-                    title="Total Orders" 
+                    title="Total Requests" 
                     value={orders.length} 
                     change="+12.5%" 
                     isPositive={true} 
@@ -107,8 +107,8 @@ const CustomerDashboard = () => {
                     color="violet" 
                   />
                   <StatCard 
-                    title="Active Shipments" 
-                    value={orders.filter(order => order.orderStatus !== "Delivered").length} 
+                    title="Pending Requests" 
+                    value={orders.filter(order => order.orderStatus !== "Delivered" && order.orderStatus !== "Approved").length} 
                     change="+8.2%" 
                     isPositive={true} 
                     icon={<Truck size={24} className="text-white" />} 
@@ -117,8 +117,8 @@ const CustomerDashboard = () => {
                     color="indigo" 
                   />
                   <StatCard 
-                    title="Completed" 
-                    value={orders.filter(order => order.orderStatus === "Delivered").length} 
+                    title="Approved" 
+                    value={orders.filter(order => order.orderStatus === "Delivered" || order.orderStatus === "Approved").length} 
                     change="+5.3%" 
                     isPositive={true} 
                     icon={<ShieldCheck size={24} className="text-white" />} 
@@ -139,13 +139,13 @@ const CustomerDashboard = () => {
                             <Package className="w-5 h-5 text-white" />
                           </div>
                           <div>
-                            <h2 className="text-lg font-semibold text-slate-900 dark:text-white">Recent Orders</h2>
-                            <p className="text-sm text-slate-500 dark:text-slate-400">Track and manage your orders</p>
+                            <h2 className="text-lg font-semibold text-slate-900 dark:text-white">Recent Requests</h2>
+                            <p className="text-sm text-slate-500 dark:text-slate-400">Track and manage your requests</p>
                           </div>
                         </div>
                         <div className="flex items-center gap-3">
                           <select className="px-3 py-2 bg-white/50 dark:bg-slate-900/50 border border-slate-200/50 dark:border-slate-700/50 rounded-lg text-sm backdrop-blur-sm text-slate-700 dark:text-slate-200">
-                            <option>All Orders</option>
+                            <option>All Requests</option>
                             <option>Last 7 days</option>
                             <option>Last 30 days</option>
                           </select>
@@ -158,13 +158,13 @@ const CustomerDashboard = () => {
                         <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-r from-violet-500 to-indigo-600 text-white mb-4">
                           <Package className="w-8 h-8" />
                         </div>
-                        <h3 className="text-lg font-medium text-slate-900 dark:text-white mb-2">No orders yet</h3>
-                        <p className="text-slate-500 dark:text-slate-400 mb-6">Start by placing your first order</p>
+                        <h3 className="text-lg font-medium text-slate-900 dark:text-white mb-2">No requests yet</h3>
+                        <p className="text-slate-500 dark:text-slate-400 mb-6">Start by submitting your first request</p>
                         <Link
-                          to="/shop"
+                          to="/employee/request"
                           className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white rounded-lg transition-colors"
                         >
-                          Browse Products <ArrowRightIcon className="ml-2 w-4 h-4" />
+                          Browse Resources <ArrowRightIcon className="ml-2 w-4 h-4" />
                         </Link>
                       </div>
                     ) : (
@@ -172,10 +172,10 @@ const CustomerDashboard = () => {
                         <table className="w-full border-collapse">
                           <thead>
                             <tr className="border-b border-slate-200/50 dark:border-slate-700/50">
-                              <th className="px-6 py-4 text-left text-sm font-medium text-slate-500 dark:text-slate-400">Order ID</th>
+                              <th className="px-6 py-4 text-left text-sm font-medium text-slate-500 dark:text-slate-400">Request ID</th>
                               <th className="px-6 py-4 text-left text-sm font-medium text-slate-500 dark:text-slate-400">Date</th>
                               <th className="px-6 py-4 text-left text-sm font-medium text-slate-500 dark:text-slate-400">Status</th>
-                              <th className="px-6 py-4 text-left text-sm font-medium text-slate-500 dark:text-slate-400">Total</th>
+                              <th className="px-6 py-4 text-left text-sm font-medium text-slate-500 dark:text-slate-400">Items</th>
                               <th className="px-6 py-4 text-right text-sm font-medium text-slate-500 dark:text-slate-400">Actions</th>
                             </tr>
                           </thead>
@@ -198,7 +198,7 @@ const CustomerDashboard = () => {
                                 </td>
                                 <td className="px-6 py-4">
                                   <span className="font-medium text-slate-900 dark:text-white">
-                                    ₹{order.totalAmount.toLocaleString()}
+                                    {order.items?.length || 0} items
                                   </span>
                                 </td>
                                 <td className="px-6 py-4 text-right">
@@ -207,7 +207,7 @@ const CustomerDashboard = () => {
                                     className="inline-flex items-center px-3 py-1.5 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white text-sm font-medium rounded-lg transition-colors group-hover:shadow-lg group-hover:shadow-violet-500/25"
                                   >
                                     <Truck className="w-4 h-4 mr-1.5" strokeWidth={2} />
-                                    Track
+                                    View
                                   </button>
                                 </td>
                               </tr>
@@ -372,9 +372,9 @@ const StatusBadge = ({ status }) => {
   return (
     <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border ${getStatusStyles()}`}>
       <span className={`w-1 h-1 rounded-full mr-1.5 ${
-        status === "Delivered" ? "bg-emerald-500" :
-        status === "Processing" ? "bg-amber-500" :
-        status === "Shipped" ? "bg-blue-500" :
+        status === "Approved" || status === "Delivered" ? "bg-emerald-500" :
+        status === "Pending" ? "bg-amber-500" :
+        status === "Rejected" ? "bg-red-500" :
         "bg-slate-500"
       }`}></span>
       {status}

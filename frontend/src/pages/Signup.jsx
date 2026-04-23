@@ -9,7 +9,7 @@ const Signup = () => {
     name: "",
     email: "",
     password: "",
-    role: "customer", // Default role
+    role: "employee", // Default role
   });
   const [isHovered, setIsHovered] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState(0);
@@ -20,9 +20,8 @@ const Signup = () => {
   const { isLoading, error } = useSelector((state) => state.auth);
 
   const getRoleOptions = () => [
-    { value: "customer", label: "Customer" },
-    { value: "driver", label: "Driver" },
-    { value: "warehouse_manager", label: "Warehouse Manager" },
+    { value: "employee", label: "Employee" },
+    { value: "resource_manager", label: "Resource Manager" },
     { value: "admin", label: "Admin" }
   ];
 
@@ -246,7 +245,7 @@ const Signup = () => {
         </div>
 
         <div className="mt-10 text-center text-slate-500 dark:text-slate-400 text-sm">
-          © {new Date().getFullYear()} LogiSphere. All rights reserved.
+          © {new Date().getFullYear()} ResoTrack. All rights reserved.
         </div>
       </div>
     </div>

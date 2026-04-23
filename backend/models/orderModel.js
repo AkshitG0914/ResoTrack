@@ -20,56 +20,21 @@ const orderSchema = new mongoose.Schema(
         },
       },
     ],
-    totalAmount: {
-      type: Number,
-      required: true,
+    justification: {
+      type: String,
     },
     orderStatus: {
       type: String,
-      enum: ["Processing","Pending","Shipped", "Delivered","Cancelled"], 
-      default: "Processing",
-    },
-    assignedDriver: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: false, 
+      enum: ["Pending", "Approved", "Rejected", "Returned", "Cancelled"], 
+      default: "Pending",
     },
     trackingId: {
       type: String,
       unique: true,
-      required: true, // Ensuring tracking ID is mandatory
-    },
-    estimatedDelivery: {
-      type: Date,
-    },
-    paymentMode: {
-      type: String,
-      enum: ["Online", "COD"],
-      // required: true,
-    },
-    paymentStatus: {
-      type: String,
-      enum: ["Paid", "Unpaid", "Refunded"],
-      default: "Unpaid",
-    },
-    paymentId: {
-      type: String, // Stores online payment transaction ID
-    },
-    refund: {
-      status: { type: String, enum: ["Processing", "Pending", "Refunded"], default: "Pending" },
-      refundId: { type: String }, // Stores refund transaction ID
-      refundAmount: { type: Number },
-      refundDate: { type: Date },
-    },
-    cancellationReason: {
-      type: String, // Stores why an order was canceled
-    },
-    deliveryConfirmation: {
-      type: String, // Store OTP or signature
-      required: false,
+      required: true, 
     },
     qrCode: {
-      type: String, // Store the QR code URL as a string
+      type: String, 
     },
   },
   { timestamps: true }

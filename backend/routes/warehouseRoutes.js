@@ -18,7 +18,7 @@ router.get("/", getWarehouses);
 
 // 📌 Update stock quantity (Restricted to warehouse managers & admins)
 
-router.put("/:id", protect, authorize("warehouseManager", "admin"), updateStockQuantity);
+router.put("/:id", protect, authorize("resource_manager", "admin"), updateStockQuantity);
 
 router.get("/stats", getWarehouseStats); 
 

@@ -1,22 +1,21 @@
 const Product = require("../models/productModel");
 const asyncHandler = require("express-async-handler");
 
-// 🚀 Add New Product
+// 🚀 Add New Resource
 const addProduct = asyncHandler(async (req, res) => {
-  const { name, price, stock, category, description } = req.body;
+  const { name, stock, category, description } = req.body;
 
-  if (!name || !price || !stock || !category || !description) {
+  if (!name || !stock || !category) {
     res.status(400);
-    throw new Error("All fields are required.");
+    throw new Error("Name, stock, and category are required.");
   }
 
   const product = new Product({
     name,
     description,
     category,
-    price,
     stock,
-    createdBy: req.user._id, // Ensure user is authenticated
+    createdBy: req.user._id,
   });
 
   const createdProduct = await product.save();
@@ -29,20 +28,19 @@ const getInventory = asyncHandler(async (req, res) => {
   res.status(200).json(inventory);
 });
 
-// 📌 Update Product in Inventory
+// 📌 Update Resource in Inventory
 const updateProduct = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const { name, price, stock, category, description } = req.body;
+  const { name, stock, category, description } = req.body;
 
   const product = await Product.findById(id);
 
   if (!product) {
     res.status(404);
-    throw new Error("Product not found");
+    throw new Error("Resource not found");
   }
 
   product.name = name || product.name;
-  product.price = price || product.price;
   product.stock = stock || product.stock;
   product.category = category || product.category;
   product.description = description || product.description;

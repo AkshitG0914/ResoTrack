@@ -18,21 +18,21 @@ const {
 
 const router = express.Router();
 router.post("/", protect, createOrder); // ✅ Ensure this route exists
-router.get("/", protect, authorize("admin", "warehouse_manager"), getAllOrders);
+router.get("/", protect, authorize("admin", "resource_manager"), getAllOrders);
 router.get("/user", protect, getCustomerOrders);
 // router.get("/user", protect, getUserOrders);
 
 // router.put("/:id/cancel", protect, cancelOrder);
-router.put("/:id/cancel", protect, authorize("admin", "customer"), cancelOrder);
+router.put("/:id/cancel", protect, authorize("admin", "employee"), cancelOrder);
 
 // Admins & Warehouse Managers can update order status (including cancellations)
-router.put("/:id", protect, authorize("admin", "warehouse_manager"), updateOrderStatus);
+router.put("/:id", protect, authorize("admin", "resource_manager"), updateOrderStatus);
 router.get("/invoice/:id", createInvoice);
 // Drivers can also update shipment status
 router.put(
   "/shipment/update/:shipmentId",
   protect,
-  authorize("admin", "warehouseManager", "driver"),
+  authorize("admin", "resource_manager"),
   updateShipmentStatus
 );
 
