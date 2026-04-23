@@ -723,20 +723,26 @@ const OrderDashboard = () => {
                         </td>
                         <td className="p-4">
                           <div className="flex space-x-2">
-                            <button
-                              onClick={() => openModal('update', order._id)}
-                              className="p-2 bg-gradient-to-r from-violet-500 to-indigo-600 text-white rounded-lg hover:shadow-md transition-all duration-300 transform hover:-translate-y-1"
-                              title="Update Status"
-                            >
-                              <CheckCircle size={16} />
-                            </button>
-                            <button
-                              onClick={() => openModal('cancel', order._id)}
-                              className="p-2 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg hover:shadow-md transition-all duration-300 transform hover:-translate-y-1"
-                              title="Cancel Order"
-                            >
-                              <XCircle size={16} />
-                            </button>
+                            {['Approved', 'Rejected', 'Cancelled', 'Delivered'].includes(order.orderStatus) ? (
+                              <span className="text-xs text-slate-400 dark:text-slate-500 italic px-2 py-1">Finalized</span>
+                            ) : (
+                              <>
+                                <button
+                                  onClick={() => openModal('update', order._id)}
+                                  className="p-2 bg-gradient-to-r from-violet-500 to-indigo-600 text-white rounded-lg hover:shadow-md transition-all duration-300 transform hover:-translate-y-1"
+                                  title="Update Status"
+                                >
+                                  <CheckCircle size={16} />
+                                </button>
+                                <button
+                                  onClick={() => openModal('cancel', order._id)}
+                                  className="p-2 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg hover:shadow-md transition-all duration-300 transform hover:-translate-y-1"
+                                  title="Cancel Request"
+                                >
+                                  <XCircle size={16} />
+                                </button>
+                              </>
+                            )}
                           </div>
                         </td>
                       </tr>

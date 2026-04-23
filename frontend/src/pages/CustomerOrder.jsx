@@ -105,10 +105,7 @@ const CustomerOrder = () => {
       return;
     }
 
-    if (!justification.trim()) {
-      alert("Please provide a justification for this request.");
-      return;
-    }
+    // Justification/Note is now optional, no validation required.
 
     try {
       setIsProcessingOrder(true);
@@ -365,15 +362,14 @@ const CustomerOrder = () => {
                           
                           <div className="pt-4 border-t border-slate-200/50 dark:border-slate-700/50">
                             <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                              Why do you need this resource? <span className="text-red-500">*</span>
+                              Note (optional)
                             </label>
                             <textarea
                               value={justification}
                               onChange={(e) => setJustification(e.target.value)}
-                              placeholder="E.g., Client presentation, Temporary replacement laptop..."
+                              placeholder="E.g., Warehouse shelf B allocation, temporary usage note..."
                               className="w-full px-3 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-violet-500 outline-none resize-none"
                               rows="3"
-                              required
                             ></textarea>
                           </div>
                           

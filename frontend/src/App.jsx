@@ -21,7 +21,6 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/admin/users" element={<AdminUsers />} />
         {/* Protected Routes (Only Logged-In Users) */}
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={
@@ -32,6 +31,7 @@ function App() {
           } />
           <Route path="/inventory" element={<InventoryDashboard />} />
           <Route path="/orders" element={<OrderDashboard />} />
+          <Route path="/admin/users" element={<AdminUsers />} />
         </Route>
 
         <Route element={<ProtectedRoute allowedRoles={["employee"]} />}>

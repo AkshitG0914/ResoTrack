@@ -9,21 +9,15 @@ const Signup = () => {
     name: "",
     email: "",
     password: "",
-    role: "employee", // Default role
+    role: "admin", // Admin registration only
   });
   const [isHovered, setIsHovered] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState(0);
   const [scrollY, setScrollY] = useState(0);
-  
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { isLoading, error } = useSelector((state) => state.auth);
-
-  const getRoleOptions = () => [
-    { value: "employee", label: "Employee" },
-    { value: "resource_manager", label: "Resource Manager" },
-    { value: "admin", label: "Admin" }
-  ];
 
   // Handle input change
   const handleChange = (e) => {
@@ -70,8 +64,8 @@ const Signup = () => {
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-violet-500 to-indigo-600 shadow-lg mb-6 transform hover:scale-110 transition-transform duration-300">
             <TruckIcon size={32} className="text-white" />
           </div>
-          <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">Create Account</h1>
-          <p className="text-slate-600 dark:text-slate-400">Join our platform and optimize your supply chain</p>
+          <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">Create Administrator Account</h1>
+          <p className="text-slate-600 dark:text-slate-400">Set up your ResoTrack administrator access</p>
         </div>
 
         {/* Form card */}
@@ -171,35 +165,7 @@ const Signup = () => {
               )}
             </div>
 
-            {/* Role selection */}
-            <div>
-              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                Account Type
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <BriefcaseIcon size={18} className="text-slate-400 dark:text-slate-500" />
-                </div>
-                <select 
-                  name="role"
-                  onChange={handleChange}
-                  className="w-full pl-10 px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-violet-500 dark:focus:ring-violet-400 focus:border-transparent transition-all appearance-none"
-                  style={{
-                    backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`,
-                    backgroundPosition: `right 0.5rem center`,
-                    backgroundRepeat: 'no-repeat',
-                    backgroundSize: '1.5em 1.5em',
-                    paddingRight: '2.5rem'
-                  }}
-                >
-                  {getRoleOptions().map(option => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
+            {/* Role is fixed to admin — no dropdown shown */}
 
             {/* Submit button */}
             <button
@@ -217,7 +183,7 @@ const Signup = () => {
                 </span>
               ) : (
                 <>
-                  Create Account
+                  Create Administrator Account
                   <ArrowRightIcon size={18} className="ml-2 group-hover:translate-x-1 transition-transform" />
                 </>
               )}

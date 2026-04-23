@@ -27,14 +27,23 @@ export const fetchUsers = createAsyncThunk("admin/fetchUsers", async (_, thunkAP
   try {
     const token = thunkAPI.getState().auth.user?.token;
     const config = { headers: { Authorization: `Bearer ${token}` } };
-    
-    const response = await axios.get("process.env.REACT_APP_API_URL/api/admin/users", config);
-    console.log("✅ Fetched Users:", response.data); // 🔍 Debugging
-
+    const response = await axios.get("http://localhost:5000/api/admin/users", config);
     return response.data;
   } catch (error) {
-    console.error("❌ API Error:", error.response?.data || error.message);
     return thunkAPI.rejectWithValue(error.response?.data?.message || "Failed to fetch users");
+  }
+});
+
+export const createUser = createAsyncThunk("admin/createUser", async (userData, thunkAPI) => {
+  try {
+    const token = thunkAPI.getState().auth.user?.token;
+    const config = {
+      headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+    };
+    const response = await axios.post("http://localhost:5000/api/admin/users", userData, config);
+    return response.data;
+  } catch (error) {
+    return thunkAPI.rejectWithValue(error.response?.data?.message || "Failed to create user");
   }
 });
 // Fetch monthly revenue analytics
@@ -73,13 +82,14 @@ export const updateUserRole = createAsyncThunk(
 
 export const deleteUser = createAsyncThunk(
   'admin/deleteUser',
-  async (userId, { rejectWithValue }) => {
+  async (userId, thunkAPI) => {
     try {
-      // Update to match your API endpoint
-      const response = await axios.delete(`process.env.REACT_APP_API_URL/api/users/${userId}`);
-      return response.data;
+      const token = thunkAPI.getState().auth.user?.token;
+      const config = { headers: { Authorization: `Bearer ${token}` } };
+      await axios.delete(`http://localhost:5000/api/admin/users/${userId}`, config);
+      return { userId };
     } catch (error) {
-      return rejectWithValue(error.response?.data?.message || 'Failed to delete user');
+      return thunkAPI.rejectWithValue(error.response?.data?.message || 'Failed to delete user');
     }
   }
 );
@@ -94,6 +104,7 @@ const adminSlice = createSlice({
     revenueData: [],
     loading: false,
     error: null,
+    createSuccess: null,
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -138,17 +149,28 @@ const adminSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
+      .addCase(createUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.createSuccess = null;
+      })
+      .addCase(createUser.fulfilled, (state, action) => {
+        state.loading = false;
+        if (!Array.isArray(state.users)) state.users = [];
+        state.users.push(action.payload);
+        state.createSuccess = action.payload.message;
+      })
+      .addCase(createUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
       .addCase(toggleUserStatus.fulfilled, (state, action) => {
         const index = state.users.findIndex(user => user._id === action.payload._id);
-        if (index !== -1) {
-          state.users[index] = action.payload;
-        }
+        if (index !== -1) state.users[index] = action.payload;
       })
       .addCase(updateUserRole.fulfilled, (state, action) => {
         const index = state.users.findIndex(user => user._id === action.payload._id);
-        if (index !== -1) {
-          state.users[index] = action.payload;
-        }
+        if (index !== -1) state.users[index] = action.payload;
       })
       .addCase(deleteUser.pending, (state) => {
         state.loading = true;
@@ -156,8 +178,9 @@ const adminSlice = createSlice({
       })
       .addCase(deleteUser.fulfilled, (state, action) => {
         state.loading = false;
-        state.users = state.users.filter(user => user._id !== action.payload.userId);
-        state.error = null;
+        if (Array.isArray(state.users)) {
+          state.users = state.users.filter(user => user._id !== action.payload.userId);
+        }
       })
       .addCase(deleteUser.rejected, (state, action) => {
         state.loading = false;
