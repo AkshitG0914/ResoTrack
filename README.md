@@ -92,18 +92,18 @@ Follow these steps to run ResoTrack locally on your machine.
    
    *Terminal 1 (Backend):*
    ```bash
-   cd backend
+   cd "Source Code"/backend
    npm install
    ```
    
    *Terminal 2 (Frontend):*
    ```bash
-   cd frontend
+   cd "Source Code"/frontend
    npm install
    ```
 
 3. **Configure Environment Variables**
-   Create a `.env` file in the `backend` directory and add the following keys:
+   Create a `.env` file in the `Source Code/backend` directory and add the following keys:
    ```env
    PORT=5000
    MONGO_URI=your_mongodb_connection_string
@@ -136,7 +136,7 @@ To easily explore the system, a backend seeder script is provided to populate yo
 **How to run the seeder:**
 Ensure your `.env` file is properly configured with your `MONGO_URI`. Then, run:
 ```bash
-cd backend
+cd "Source Code"/backend
 node seeder.js
 ```
 *Note: Running this command creates demo users and dummy inventory data.*
@@ -155,19 +155,19 @@ Use these accounts to test the different role dashboards:
 
 ## 7. Screenshots
 
-> *Note: If the `screenshots` folder is missing from your repository, create it in the root directory and add the corresponding images (e.g., `login.png`, `dashboard.png`).*
+> *Note: If the `screenshots` folder is missing from your repository, create it in the `Source Code` directory and add the corresponding images (e.g., `login.png`, `dashboard.png`).*
 
 ### Login / Authentication
-![Login Screen](./screenshots/login.png)
+![Login Screen](./Source%20Code/screenshots/login.png)
 
 ### Main Dashboard
-![Admin Dashboard](./screenshots/dashboard.png)
+![Admin Dashboard](./Source%20Code/screenshots/dashboard.png)
 
 ### Resource Management
-![Resource Catalog](./screenshots/resources.png)
+![Resource Catalog](./Source%20Code/screenshots/resources.png)
 
 ### Request Workflow
-![Request Approvals](./screenshots/requests.png)
+![Request Approvals](./Source%20Code/screenshots/requests.png)
 
 ---
 
@@ -185,7 +185,7 @@ Use these accounts to test the different role dashboards:
 ## 9. Team Members
 
 - **Akshit** - [GitHub](https://github.com/AkshitG0914)
-- **Lovish Bhateja** - [GitHub](https://github.com/placeholder)
+- **Lovish Bhateja** - [GitHub](https://github.com/lovish-7)
 
 ---
 
